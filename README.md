@@ -5,8 +5,11 @@
 
 ## Train and run
 1. record
-2. train
-3. auto_run
+2. Object Detection training (YOLOv8)
+   * personally using roboflow.com
+     * add project > upload images > label manually > train model > download 
+3. train
+4. auto_run
 
 ## Todo
 
