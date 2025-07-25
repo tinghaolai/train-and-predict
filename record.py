@@ -23,7 +23,7 @@ os.makedirs(image_dir, exist_ok=True)
 
 records = []
 frame_count = 0
-total_duration = 300  # 5 分鐘
+total_duration = 60  # 5 分鐘
 interval = 0.1
 end_time = time.time() + total_duration
 
