@@ -23,7 +23,6 @@
 * run `train_multimodal.py`
 * run `auto_run_multimodal.py`
 
-## Todo
+## Support functions
 
-* YOLOv8 + CNN
-* Multi-modal Imitation Learning for training
+* `yolo_detect.py` to check screen_shot_result and if detect anything
