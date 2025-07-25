@@ -44,10 +44,10 @@ with mss.mss() as sct:
                 2
             )
 
-        # 儲存圖片
-        out_path = os.path.join('yolo_detect_result', f"frame_{frame_index:04d}.jpg")
-        cv2.imwrite(out_path, annotated_img)
-        print(f"💾 已儲存：{out_path}")
+        # 儲存圖片, uncomment to using feature
+        # out_path = os.path.join('yolo_detect_result', f"frame_{frame_index:04d}.jpg")
+        # cv2.imwrite(out_path, annotated_img)
+        # print(f"💾 已儲存：{out_path}")
 
         frame_index += 1
         time.sleep(0.5)
