@@ -19,6 +19,7 @@
 * run `train_yolov8.py`
 * run `generate_yolo_features.py`
 * run `train_multimodal.py`
+* copy `runs/train/yolov8n-customXX-weights/best/pt` into `dataset/XXXX/yolov8_best.pt`
 * run `auto_run_multimodal.py`
 
 ## Todo
