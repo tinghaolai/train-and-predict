@@ -17,9 +17,10 @@
 * record
 * mark image for Yolo v8
 * run `train_yolov8.py`
-* run `generate_yolo_features.py`
+* change code `yolo_model = YOLO('./runs/train/yolov8n-customXXX/weights/best.pt')` in `generate_yolo_features`
+  * run `generate_yolo_features.py`
+* copy `runs/train/yolov8n-customXX-weights/best/pt` into `dataset/XXXX/`
 * run `train_multimodal.py`
-* copy `runs/train/yolov8n-customXX-weights/best/pt` into `dataset/XXXX/yolov8_best.pt`
 * run `auto_run_multimodal.py`
 
 ## Todo
