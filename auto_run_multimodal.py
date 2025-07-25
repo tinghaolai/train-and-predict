@@ -67,7 +67,7 @@ with mss.mss() as sct:
 
             # 擷取畫面
             screenshot = np.array(sct.grab(GAME_REGION))[:, :, :3]
-            resized = cv2.resize(screenshot, (768, 1366))  # Tensorflow model input = (768, 1366)
+            resized = cv2.resize(screenshot, (1366, 768))  # Tensorflow model input = (768, 1366)
             input_image = resized.astype('float32') / 255.0
             input_image = input_image[np.newaxis, ...]
 
