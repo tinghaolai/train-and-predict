@@ -5,7 +5,7 @@ model = YOLO('yolov8n.yaml')  # 使用空模型開始訓練，或改用 yolov8n.
 
 # 訓練
 model.train(
-    data='./dataset/data.yaml',
+    data='./yolo/dataset/data.yaml',
     epochs=100,
     imgsz=640,
     batch=16,
