@@ -19,7 +19,7 @@
 * run `train_yolov8.py`
 * change code `yolo_model = YOLO('./runs/train/yolov8n-customXXX/weights/best.pt')` in `generate_yolo_features`
   * run `generate_yolo_features.py`
-* copy `runs/train/yolov8n-customXX-weights/best/pt` into `dataset/XXXX/`
+* copy `runs/train/yolov8n-customXX-weights/best.pt` into `dataset/XXXX/yolo8_best.pt`
 * run `train_multimodal.py`
 * run `auto_run_multimodal.py`
 
