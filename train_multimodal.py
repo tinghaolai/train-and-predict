@@ -21,27 +21,32 @@ with open(yolo_feat_path, 'r') as f:
 
 combo_set = sorted(set(tuple(r['keys']) for r in records))
 combo_to_index = {combo: i for i, combo in enumerate(combo_set)}
-y = np.array([combo_to_index[tuple(r['keys'])] for r in records])
-y_cat = to_categorical(y, num_classes=len(combo_set))
+num_classes = len(combo_set)
 
-X_img, X_yolo = [], []
+train_records, test_records = train_test_split(records, test_size=0.1, random_state=42)
 
-for r in records:
-    img_path = os.path.join(image_dir, r['frame'])
-    img = load_img(img_path)
-    img_array = img_to_array(img) / 255.0
-    X_img.append(img_array)
-    X_yolo.append(yolo_features[r['frame']])
+# --- 建立 generator ---
+def data_generator(records, yolo_features, image_dir, combo_to_index, batch_size=8, num_classes=10):
+    i = 0
+    while True:
+        X_img, X_yolo, y_batch = [], [], []
+        for _ in range(batch_size):
+            if i >= len(records):
+                i = 0
+            r = records[i]
+            img_path = os.path.join(image_dir, r['frame'])
+            img = load_img(img_path)  # 原圖尺寸
+            img_array = img_to_array(img).astype('float32') / 255.0
+            X_img.append(img_array)
+            X_yolo.append(yolo_features[r['frame']])
+            label_index = combo_to_index[tuple(r['keys'])]
+            y_batch.append(to_categorical(label_index, num_classes=num_classes))
+            i += 1
 
-X_img = np.array(X_img)
-X_yolo = np.array(X_yolo, dtype=np.float32)
-
-if not all(img.shape == (768, 1366, 3) for img in X_img):
-    raise ValueError("❌ 有圖片尺寸不對")
-
-X_train_img, X_test_img, X_train_yolo, X_test_yolo, y_train, y_test = train_test_split(
-    X_img, X_yolo, y_cat, test_size=0.1, random_state=42
-)
+        yield (
+            {'image_input': np.array(X_img), 'yolo_input': np.array(X_yolo, dtype=np.float32)},
+            np.array(y_batch)
+        )
 
 # --- 建立模型 ---
 img_input = Input(shape=(768, 1366, 3), name='image_input')
@@ -58,23 +63,25 @@ x = Flatten()(x)
 merged = Concatenate()([x, yolo_input])
 x = Dropout(0.5)(merged)
 x = Dense(128, activation='relu')(x)
-output = Dense(len(combo_set), activation='softmax')(x)
+output = Dense(num_classes, activation='softmax')(x)
 
 model = Model(inputs=[img_input, yolo_input], outputs=output)
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 # --- 訓練 ---
+batch_size = 8
+steps_per_epoch = len(train_records) // batch_size
+validation_steps = len(test_records) // batch_size
+
 model.fit(
-    {'image_input': X_train_img, 'yolo_input': X_train_yolo},
-    y_train,
-    epochs=10,
-    batch_size=8,
-    validation_data=(
-        {'image_input': X_test_img, 'yolo_input': X_test_yolo},
-        y_test
-    )
+    data_generator(train_records, yolo_features, image_dir, combo_to_index, batch_size, num_classes),
+    steps_per_epoch=steps_per_epoch,
+    validation_data=data_generator(test_records, yolo_features, image_dir, combo_to_index, batch_size, num_classes),
+    validation_steps=validation_steps,
+    epochs=50
 )
 
+# --- 儲存 ---
 model.save(os.path.join(latest_folder, "trained_multimodal_model.h5"))
 with open(os.path.join(latest_folder, "combo_map.json"), 'w') as f:
     json.dump({str(list(k)): v for k, v in combo_to_index.items()}, f, indent=2)
