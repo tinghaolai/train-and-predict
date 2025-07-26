@@ -6,7 +6,7 @@ import numpy as np
 from ultralytics import YOLO
 
 # 設定 YOLO 模型（替換為你的 best.pt 路徑）
-yolo_model = YOLO('runs/train/yolov8n-custom7/weights/best.pt')
+yolo_model = YOLO('runs/train/yolov8n-custom8/weights/best.pt')
 
 # 擷取畫面區域
 GAME_REGION = {"top": 0, "left": 0, "width": 1366, "height": 768}
