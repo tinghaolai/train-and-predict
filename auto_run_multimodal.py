@@ -7,6 +7,7 @@ import json
 import keyboard
 from tensorflow.keras.models import load_model
 from ultralytics import YOLO
+import random
 
 MONITORED_KEYS = ['left', 'right', 'up', 'down', 'z', 'x', 'c', 's']
 INSTANT_KEYS = ['z', 'x', 'c', 's']
@@ -94,7 +95,7 @@ with mss.mss() as sct:
                         keyboard.press(k)
 
             print(f"🎯 {', '.join(keys) if keys else 'none'} | 🔍 conf: {confidence:.2f}")
-            time.sleep(INFER_INTERVAL)
+            time.sleep(random.uniform(0.08, 0.15))
 
     finally:
         for k in MONITORED_KEYS:
